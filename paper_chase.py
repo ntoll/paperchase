@@ -1,9 +1,13 @@
 """
 Paper Chase.
 """
+import random
+
+
 WIDTH = 1024
 HEIGHT = 384
 SPEED = 20
+OBJECT_FREQUENCY = 100
 
 stickperson = Actor('run1')
 stickperson.pos = 512, 304
@@ -12,12 +16,26 @@ stickperson.frame = 1
 stickperson.jumping = False
 stickperson.flying = False
 stickperson.kicking = False
+stickperson.dead = False
 floor_a = Actor('floor')
-floor_a.pos = 0, 288
+floor_a.pos = 0, 332
 floor_b = Actor('floor')
-floor_b.pos = 1024, 288
+floor_b.pos = 1024, 332
+
+objects_small = [
+    'pound_coin',
+    'paper_clip',
+]
+
+objects_big = [
+    'coffee_cup',
+]
+
+active_objects = []
+
 
 def animate_update():
+    global active_objects
     stickperson.score += 1
     if stickperson.jumping:
         stickperson.image = "run3"
@@ -37,8 +55,14 @@ def animate_update():
         floor_a.left = floor_b.right
     if int(floor_b.right) < 0:
         floor_b.left = floor_a.right
+    for obj in active_objects:
+        obj.left -= SPEED
+        if obj.right < 0:
+            active_objects.remove(obj)
+        if stickperson.colliderect(obj):
+            stickperson.dead = True
     clock.schedule_unique(animate_update, 0.08)
-
+    
 clock.schedule_unique(animate_update, 0.08)
 
 def jump():
@@ -72,18 +96,26 @@ def kick():
     clock.schedule_unique(land, 0.6)
 
 def update():
+    global active_objects
     if keyboard[keys.SPACE] and not stickperson.jumping:
         jump()
-    if keyboard[keys.UP]:
+    if keyboard[keys.UP] and not stickperson.jumping:
         stickperson.flying = True
         fly_up()
     if keyboard[keys.DOWN]:
         fly_down()
     if keyboard[keys.RIGHT] and not stickperson.kicking and not stickperson.flying:
         kick()
+    if random.randint(0, OBJECT_FREQUENCY) == 0:
+        objects = random.choice([objects_small, objects_big])
+        new_object = Actor(random.choice(objects), pos=(1024, random.randint(64, 304)))
+        new_object.angle = random.randint(0, 359)
+        active_objects.append(new_object)
 
 def draw():
     screen.blit('paper', (0, 0))
     stickperson.draw()
     floor_a.draw()
     floor_b.draw()
+    for obj in active_objects:
+        obj.draw()
