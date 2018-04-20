@@ -1,5 +1,5 @@
 Paper Chase
-===========
+-----------
 
 A very simple game written for `Pyweek 25 <https://pyweek.org/25/>`_ by
 `Nicholas H.Tollervey <https://twitter.com/ntoll>`_ (instructions for
@@ -33,13 +33,17 @@ XKCD reference <https://www.xkcd.com/353/>`_).
 
 The keys are:
 
- Action    Red     Blue
-======== ======= ========
-   Up      Up       W
-  Down    Down      S
-  Kick    Right     D
-  Jump    Enter    Space
-======== ======= ========
++--------+-----+------+
+| Action | Red | Blue |
++========+=====+======+
+|  Up    | Up  |  W   |
++--------+-----+------+
+|  Down  | Down|  S   |
++--------+-----+------+
+|  Kick  |Right|  D   |
++--------+-----+------+
+|  Jump  |Enter| Space|
++--------+-----+------+
 
 As the game progresses the obstacles come more often and the pace of the
 game speeds up.
